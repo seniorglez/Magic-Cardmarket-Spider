@@ -13,16 +13,29 @@ class MkmSpider(scrapy.Spider):
     home='https://www.cardmarket.com'
     url = 'https://www.cardmarket.com/en/Magic/Products/Singles?idExpansion=0&idRarity=0&sortBy=name_asc&perSite=30'
     
-    
+    custom_settings = {
+        'CONCURRENT_REQUESTS': 2,
+        'CONCURRENT_REQUESTS_PER_DOMAIN': 2,
+        'DOWNLOAD_DELAY': 3.5,  
+        'COOKIES_ENABLED': False,
+        'HTTPCACHE_ENABLED': False,
+        'FEED_FORMAT': 'json',
+    }
+
+
     def __init__(self, *args, **kwargs):
         super(MkmSpider, self).__init__(*args, **kwargs)
         
     # Request search main page
     def start_requests(self):
         yield Request(self.url,
-                    callback=self.search_request,
+                    callback=self.process_form_listing,
                     dont_filter=True)
 
+    def process_form_listing(self, response):
+        expansion_ids = response.xpath("//select[@name='idExpansion']/option[@value!=0]/@value").getall()
+        for i in expansion_ids:
+            yield Request(f'https://www.cardmarket.com/es/Magic/Products/Singles?idExpansion={i}&idRarity=0&perSite=30',callback=self.search_request)
 
     def search_request(self,response):
         urls = response.xpath("//div[@class='table-body']//div[@class='col-10 col-md-8 px-2 flex-column align-items-start justify-content-center']/a/@href").getall()
@@ -64,44 +77,21 @@ class MkmSpider(scrapy.Spider):
         return int(response.xpath('//dl[@class="labeled row no-gutters mx-auto"]//dd[4]/text()').get())
 
     def __parse_minimum_price(self,response):
-        raw = response.xpath('//dl[@class="labeled row no-gutters mx-auto"]//dd[5]/text()').get()
-        if raw:
-            raw.replace(' €','')
-            return float(raw)
-        else: 
-            return None
-
-
+        return self.__parse_euro_to_float(response.xpath('//dl[@class="labeled row no-gutters mx-auto"]//dd[5]/text()').get())
+       
     def __parse_price_trend(self,response):
-        raw = response.xpath('//dl[@class="labeled row no-gutters mx-auto"]//dd[6]/span/text()').get()
-        if raw:
-            raw.replace(' €','')
-            return float(raw)
-        else: 
-            return None
-
+        return self.__parse_euro_to_float(response.xpath('//dl[@class="labeled row no-gutters mx-auto"]//dd[6]/span/text()').get())
+      
     def __parse_average_price_30_days(self,response):
-        raw = response.xpath('//dl[@class="labeled row no-gutters mx-auto"]//dd[7]/span/text()').get()
-        if raw:
-            raw.replace(' €','')
-            return float(raw)
-        else: 
-            return None
+        return self.__parse_euro_to_float(response.xpath('//dl[@class="labeled row no-gutters mx-auto"]//dd[7]/span/text()').get())
 
     def __parse_average_price_7_days(self,response):
-        raw = response.xpath('//dl[@class="labeled row no-gutters mx-auto"]//dd[8]/span/text()').get()
-        if raw:
-            raw.replace(' €','')
-            return float(raw)
-        else: 
-            return None
-
+        return self.__parse_euro_to_float(response.xpath('//dl[@class="labeled row no-gutters mx-auto"]//dd[8]/span/text()').get())
+       
     def __parse_average_price_1_day(self,response):
-        raw = response.xpath('//dl[@class="labeled row no-gutters mx-auto"]//dd[9]/span/text()').get()
-        if raw:
-            raw.replace(' €','')
-            return float(raw)
-        else:
-            return None
+        return self.__parse_euro_to_float(response.xpath('//dl[@class="labeled row no-gutters mx-auto"]//dd[9]/span/text()').get())
 
+    #utils
 
+    def __parse_euro_to_float(self,string):
+        return float(string.replace('€','').replace(',','.').strip()) if string else None
