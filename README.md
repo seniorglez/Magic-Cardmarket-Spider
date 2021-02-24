@@ -6,25 +6,25 @@ These instructions will get you a copy of the project up and running on your loc
 
 The only package you need is scrapy. To install it, run the following command:
 
-,,,bash
+```bash
 pip install scrapy
-,,,
+```
 
 If your system (I assume it is UNIX) does not recognize the command "scrapy" add it to your path:
 
-,,,bash
+```bash
 PATH="${PATH}:${HOME}/.local/bin"
-,,,
+```
 
 ## Run the project
 
 Before executing anything, keep in mind that this execution may take days:
 
-,,,bash
+```bash
 cd mkm
 
 scrapy crawl mkm -o outputfile.csv
-,,,
+```
 
 ## Built With
 
