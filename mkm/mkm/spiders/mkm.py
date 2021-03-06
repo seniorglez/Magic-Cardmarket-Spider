@@ -9,8 +9,8 @@ from mkm.items import MagicItem
 class MkmSpider(scrapy.Spider):
  
     name = 'mkm'
-
-    home='https://www.cardmarket.com'
+    
+    home = 'https://www.cardmarket.com'
     url = 'https://www.cardmarket.com/en/Magic/Products/Singles?idExpansion=0&idRarity=0&sortBy=name_asc&perSite=30'
     
     custom_settings = {
@@ -28,16 +28,30 @@ class MkmSpider(scrapy.Spider):
         
     # Request search main page
     def start_requests(self):
-        yield Request(self.url,
+        ''' This method is called by Scrapy when the spider is opened.
+        '''
+        return Request(self.url,
                     callback=self.process_form_listing,
                     dont_filter=True)
 
     def process_form_listing(self, response):
+        ''' This function creates request for all the listing of all the mtg expansions in order to parse every 'singles card' posible. 
+        @url https://www.cardmarket.com/en/Magic/Products/Singles?idExpansion=0&idRarity=0&sortBy=name_asc&perSite=30
+        @returns items 0
+        @returns request 1
+        '''
+
         expansion_ids = response.xpath("//select[@name='idExpansion']/option[@value!=0]/@value").getall()
         for i in expansion_ids:
             yield Request(f'https://www.cardmarket.com/es/Magic/Products/Singles?idExpansion={i}&idRarity=0&perSite=30',callback=self.search_request)
 
     def search_request(self,response):
+        '''This function parses a card adverts SERP.
+
+        @url https://www.cardmarket.com/en/Magic/Products/Search?idCategory=0&idExpansion=1&idRarity=0&perSite=30
+        @returns items 0
+        @returns requests 0 30
+        '''
         urls = response.xpath("//div[@class='table-body']//div[@class='col-10 col-md-8 px-2 flex-column align-items-start justify-content-center']/a/@href").getall()
         for url in urls:
             yield Request(self.home+url,
@@ -49,6 +63,13 @@ class MkmSpider(scrapy.Spider):
         
     
     def parse_item(self,response):
+        ''' This function parses a card advert.
+
+        @url https://www.cardmarket.com/en/Magic/Products/Singles/Kaldheim/Woodland-Chasm
+        @returns items 1
+        @returns requests 0
+        @scrapes url name number card_set minimun price_trend average_price_30_days average_price_7_days average_price_1_day
+        '''
         item = MagicItem()
         
         item['url'] = response.url
@@ -62,7 +83,9 @@ class MkmSpider(scrapy.Spider):
         item['average_price_7_days'] = self.__parse_average_price_7_days(response)
         item['average_price_1_day'] = self.__parse_average_price_1_day(response)
 
-        yield item
+        return item
+
+    #parsers
 
     def __parse_name(self,response):
         return response.xpath('//h1/text()').get()
