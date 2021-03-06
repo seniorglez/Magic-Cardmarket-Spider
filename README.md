@@ -1,8 +1,10 @@
 # Magic-Cardmarket-Spider
 
-These instructions will get you a copy of the project up and running on your local machine for development and testing purposes.
+A scrapy-powered spider which parses all the 'single card' magic advertisement on https://www.cardmarket.com/.
 
 ## Prerequisites
+
+These instructions will get you a copy of the project up and running on your local machine for development and testing purposes.
 
 The only package you need is scrapy. To install it, run the following command:
 
