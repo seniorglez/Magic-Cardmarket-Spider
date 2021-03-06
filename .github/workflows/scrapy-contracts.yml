@@ -24,6 +24,6 @@ jobs:
     - name: run scrapy contract
       run: |
         cd mkm
-        ${HOME}/.local/bin/scrapy check
+        scrapy check
         
 
