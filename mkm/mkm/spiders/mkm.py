@@ -3,13 +3,11 @@ import scrapy
 from datetime import datetime
 from scrapy import Request
 from scrapy.spidermiddlewares.httperror import HttpError
-
 from mkm.items import MagicItem
 
 class MkmSpider(scrapy.Spider):
  
     name = 'mkm'
-    
     home = 'https://www.cardmarket.com'
     url = 'https://www.cardmarket.com/en/Magic/Products/Singles?idExpansion=0&idRarity=0&sortBy=name_asc&perSite=30'
     
@@ -21,7 +19,6 @@ class MkmSpider(scrapy.Spider):
         'HTTPCACHE_ENABLED': False,
         'FEED_FORMAT': 'json',
     }
-
 
     def __init__(self, *args, **kwargs):
         super(MkmSpider, self).__init__(*args, **kwargs)
@@ -60,8 +57,7 @@ class MkmSpider(scrapy.Spider):
         if next_url:
             yield Request(self.home+next_url,
                         callback=self.search_request)
-        
-    
+            
     def parse_item(self,response):
         ''' This function parses a card advert.
 
