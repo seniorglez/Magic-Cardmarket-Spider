@@ -64,13 +64,13 @@ class MkmSpider(scrapy.Spider):
         @url https://www.cardmarket.com/en/Magic/Products/Singles/Kaldheim/Woodland-Chasm
         @returns items 1
         @returns requests 0
-        @scrapes url name number card_set minimun price_trend average_price_30_days average_price_7_days average_price_1_day
+        @scrapes url name set_number card_set minimun price_trend average_price_30_days average_price_7_days average_price_1_day
         '''
         item = MagicItem()
         
         item['url'] = response.url
         item['name'] = self.__parse_name(response)
-        item['number'] = self.__parse_number(response)
+        item['set_number'] = self.__parse_number(response)
         item['card_set'] = self.__parse_card_set(response)
        
         item['minimun'] = self.__parse_minimum_price(response)
@@ -87,7 +87,7 @@ class MkmSpider(scrapy.Spider):
         return response.xpath('//h1/text()').get()
 
     def __parse_number(self,response):
-        response.xpath('//dl[@class="labeled row no-gutters mx-auto"]//dd[2]/text()').get()
+        return response.xpath('//dl[@class="labeled row no-gutters mx-auto"]//dd[2]/text()').get()
 
     def __parse_card_set(self,response):
         return response.xpath('//dl[@class="labeled row no-gutters mx-auto"]//dd[3]/div/a[2]/text()').get()

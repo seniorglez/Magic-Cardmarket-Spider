@@ -3,7 +3,7 @@ from scrapy import Item, Field
 class MagicItem(Item):
     url = Field(type=str)
     name = Field(type=str)
-    number = Field(type=str)
+    set_number = Field(type=str)
     card_set = Field(type=str)
 
     #price
