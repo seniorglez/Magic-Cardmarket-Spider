@@ -27,7 +27,7 @@ class MkmSpider(scrapy.Spider):
     def start_requests(self):
         ''' This method is called by Scrapy when the spider is opened.
         '''
-        return Request(self.url,
+        yield Request(self.url,
                     callback=self.process_form_listing,
                     dont_filter=True)
 
