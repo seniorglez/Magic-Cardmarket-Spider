@@ -3,7 +3,7 @@ import scrapy
 from datetime import datetime
 from scrapy import Request
 from scrapy.spidermiddlewares.httperror import HttpError
-from mkm.items import MagicItem
+from magic.items import MagicCardMarketInformation
 
 class MkmSpider(scrapy.Spider):
  
@@ -66,20 +66,29 @@ class MkmSpider(scrapy.Spider):
         @returns requests 0
         @scrapes url name set_number card_set minimun price_trend average_price_30_days average_price_7_days average_price_1_day
         '''
-        item = MagicItem()
+        info = MagicCardMarketInformation()
         
-        item['url'] = response.url
-        item['name'] = self.__parse_name(response)
-        item['set_number'] = self.__parse_number(response)
-        item['card_set'] = self.__parse_card_set(response)
+        info['url'] = response.url
+        info['name'] = self.__parse_name(response)
+        info['set_number'] = self.__parse_number(response)
+        info['card_set'] = self.__parse_card_set(response)
        
-        item['minimun'] = self.__parse_minimum_price(response)
-        item['price_trend'] = self.__parse_price_trend(response)
-        item['average_price_30_days'] = self.__parse_average_price_30_days(response)
-        item['average_price_7_days'] = self.__parse_average_price_7_days(response)
-        item['average_price_1_day'] = self.__parse_average_price_1_day(response)
+        info['minimun'] = self.__parse_minimum_price(response)
+        info['price_trend'] = self.__parse_price_trend(response)
+        info['average_price_30_days'] = self.__parse_average_price_30_days(response)
+        info['average_price_7_days'] = self.__parse_average_price_7_days(response)
+        info['average_price_1_day'] = self.__parse_average_price_1_day(response)
 
-        return item
+        return info
+    
+    def get_offers(self,response):#this only will get the 25 first results, I will need to use JS to show all the results.
+        ''' This function returns a list with all the offer html
+        @url https://www.cardmarket.com/en/Magic/Products/Singles/Kaldheim/Woodland-Chasm
+        '''
+        return response.xpath("//div[@class='table article-table table-striped']/div[@class='table-body']/div[@class='row no-gutters article-row']").getall()
+
+    def parse_offer(self,offer):
+        pass
 
     #parsers
 

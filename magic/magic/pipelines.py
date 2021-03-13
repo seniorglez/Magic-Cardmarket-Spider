@@ -8,6 +8,6 @@
 from itemadapter import ItemAdapter
 
 
-class MkmPipeline:
+class MagicPipeline:
     def process_item(self, item, spider):
         return item
