@@ -58,7 +58,7 @@ USER_AGENT_LIST = [
 DOWNLOADER_MIDDLEWARES = {
     'magic.middlewares.RandomUserAgentMiddleware': 400,
 #    'magic.middlewares.MagicDownloaderMiddleware': 543,
-    'magic.middlewares.ProxyMiddleware': 410,
+    'magic.middlewares.TorProxyMiddleware': 410,
     'scrapy.contrib.downloadermiddleware.useragent.UserAgentMiddleware': None
 }
 
@@ -94,5 +94,3 @@ DOWNLOADER_MIDDLEWARES = {
 #HTTPCACHE_DIR = 'httpcache'
 #HTTPCACHE_IGNORE_HTTP_CODES = []
 #HTTPCACHE_STORAGE = 'scrapy.extensions.httpcache.FilesystemCacheStorage'
-
-HTTP_PROXY ="http://localhost:8118"
