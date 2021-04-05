@@ -65,7 +65,6 @@ class MkmSpider(scrapy.Spider):
 
         @url https://www.cardmarket.com/en/Magic/Products/Singles/Kaldheim/Woodland-Chasm
         @returns requests 0
-        @scrapes url name set_number card_set minimun price_trend average_price_30_days average_price_7_days average_price_1_day
         '''
         info = MagicCardMarketInformation()
         
