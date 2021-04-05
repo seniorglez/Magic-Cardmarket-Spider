@@ -5,12 +5,17 @@
 import os
 import random
 import logging
-from magic import settings
-from scrapy import signals
+
 from stem import Signal
-from scrapy.spiders import Spider
 from stem.control import Controller
+
+from magic import settings
+
+import scrapy
+from scrapy.crawler import Crawler
 from scrapy.settings import BaseSettings
+from scrapy.spiders import Spider
+from scrapy import signals
 
 # useful for handling different item types with a single interface
 from itemadapter import is_item, ItemAdapter
@@ -108,13 +113,14 @@ class MagicDownloaderMiddleware:
         spider.logger.info('Spider opened: %s' % spider.name)
 
 class RandomUserAgentMiddleware:
+
     def process_request(self, request, spider):
         ua  = random.choice(settings.USER_AGENT_LIST) # good enough for now
         if ua:
             request.headers.setdefault('User-Agent', ua)
 
 class TorProxyMiddleware:
-    
+
     logger = logging.getLogger("tor-proxy-middleware")
     enabled = False
     proxy_url ="http://localhost:8118"
@@ -141,9 +147,10 @@ class TorProxyMiddleware:
                 self.logger.info("Tor Proxy disabled (tor_proxy_enabled spider attribute)")
                 return
             
-            self.enabled = True
-            if self.enabled:
-                self.logger.info("Using Tor Proxy at %s", self.proxy_url)
+        self.enabled = True
+        self._read_settings(spider.crawler.settings)
+        if self.enabled:
+            self.logger.info("Using Tor Proxy at %s", self.proxy_url)
      
     def _read_settings(self, settings):
         if not settings.get("TOR_PROXY_CONTROL_PASSWORD"):

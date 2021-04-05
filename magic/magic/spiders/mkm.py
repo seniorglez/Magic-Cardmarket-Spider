@@ -19,7 +19,7 @@ class MkmSpider(scrapy.Spider):
         'COOKIES_ENABLED': False,
         'HTTPCACHE_ENABLED': False,
         'FEED_FORMAT': 'json',
-        'TOR_PROXY_ENABLED': True,
+        'TOR_PROXY_ENABLED': True
     }
 
     def __init__(self, *args, **kwargs):
