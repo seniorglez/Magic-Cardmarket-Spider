@@ -20,4 +20,14 @@ class MagicCardMarketInformation(Item):
     average_price_1_day = Field(type=float)
 
 class MagicCardMarketOffer(Item):
-    pass
+    country = Field(type=str)
+    seller = Field(type=str)
+    card_condition = Field(type=str)
+    card_language = Field(type=str)
+    is_professional = Field(type=str)
+    is_foil = Field(type=bool)
+    is_signed = Field(type=bool)
+    is_playset = Field(type=bool)
+    product_comments = Field(type=str)
+    price = Field(type=float)
+    item_count = Field(type=int)

@@ -1,0 +1,3 @@
+#!/bin/sh
+echo HashedControlPassword $(tor --hash-password "my_password" | tail -n 1) >> ./torrc
+tor -f ./torrc

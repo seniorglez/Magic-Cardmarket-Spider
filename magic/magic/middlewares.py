@@ -2,12 +2,15 @@
 #
 # See documentation in:
 # https://docs.scrapy.org/en/latest/topics/spider-middleware.html
-
+import os
+import random
+from magic import settings
 from scrapy import signals
+from stem import Signal
+from stem.control import Controller
 
 # useful for handling different item types with a single interface
 from itemadapter import is_item, ItemAdapter
-
 
 class MagicSpiderMiddleware:
     # Not all methods need to be defined. If a method is not defined,
@@ -55,7 +58,6 @@ class MagicSpiderMiddleware:
     def spider_opened(self, spider):
         spider.logger.info('Spider opened: %s' % spider.name)
 
-
 class MagicDownloaderMiddleware:
     # Not all methods need to be defined. If a method is not defined,
     # scrapy acts as if the downloader middleware does not modify the
@@ -101,3 +103,30 @@ class MagicDownloaderMiddleware:
 
     def spider_opened(self, spider):
         spider.logger.info('Spider opened: %s' % spider.name)
+
+class RandomUserAgentMiddleware:
+    def process_request(self, request, spider):
+        ua  = random.choice(settings.USER_AGENT_LIST) # good enough for now
+        if ua:
+            request.headers.setdefault('User-Agent', ua)
+
+class ProxyMiddleware:
+
+    def process_request(self, request, spider):
+        request.meta['proxy'] = settings.HTTP_PROXY # good enough for now
+        self.set_new_ip()
+    
+    def spider_opened(self, spider):
+        spider.logger.info('Spider opened: %s' % spider.name)
+    
+    def set_new_ip(self):
+        """Change IP using TOR"""
+        with Controller.from_port(port=9051) as controller:
+            if controller.is_newnym_available():
+                try:
+                    controller.authenticate("my_password")
+                    controller.signal(Signal.NEWNYM)
+                except:
+                    print("Unable to authenticate, password is incorrect")
+            else:
+                print("No newnym available")
