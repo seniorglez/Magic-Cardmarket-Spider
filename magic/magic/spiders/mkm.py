@@ -98,12 +98,12 @@ class MkmSpider(scrapy.Spider):
         item['card_condition'] = self.__parse_card_condition(selector)
         item['card_language'] = self.__parse_card_language(selector)
         item['professional_type'] = self.__parse_professional_type(selector)
-       #item['is_foil'] = self.
-       #item['is_signed'] = self.
+        item['is_foil'] = self.__parse_is_foil(selector)
+        item['is_signed'] = self.__parse_is_signed(selector)
         item['is_playset'] = self.__parse_is_playset(selector)
-       #item['product_comments'] = self.
-       #item['price'] = self.
-       #item['item_count'] = self.
+        item['product_comments'] = self.__parse_product_comments(selector)
+        item['price'] = self.__parse_price(selector)
+        item['item_count'] = self.__parse_item_count(selector)
         return item
 
     #parsers info
@@ -153,19 +153,22 @@ class MkmSpider(scrapy.Spider):
         return selector.xpath('//div[@class="col-sellerProductInfo col"]/div[@class="row no-gutters"]/div[1]/span/span/span[@class="d-flex has-content-centered mr-1 proFaded ml-lg-auto"]/span/@data-original-title').get()
         
     def __parse_is_foil(self,selector):
-        pass
+        return selector.xpath('//div[@class="col-sellerProductInfo col"]/div[@class="row no-gutters"]/div[2]//span[@data-original-title="Foil"]/@data-original-title').get() == "Foil" #This is not very verbose
 
     def __parse_is_signed(self,selector):
-        pass
+        return selector.xpath('//div[@class="col-sellerProductInfo col"]/div[@class="row no-gutters"]/div[2]//span[@data-original-title="Signed"]/@data-original-title').get() == "Signed" #This is not very verbose
 
     def __parse_is_playset(self,selector):
-        pass
+        return selector.xpath('//div[@class="col-sellerProductInfo col"]/div[@class="row no-gutters"]/div[2]//span[@data-original-title="Playset"]/@data-original-title').get() == "Playset" #This is not very verbose
+
+    def __parse_product_comments(self,selector):
+        return selector.xpath('//div[@class="col-sellerProductInfo col"]/div[@class="row no-gutters"]/div[2]//span[@class="d-block text-truncate text-muted font-italic small"]/text()').get()
 
     def __parse_price(self,selector):
-        pass
+        return self.__parse_euro_to_float(selector.xpath('//div[@class="col-offer"]//span[@class="font-weight-bold color-primary small text-right text-nowrap"]/text()').get())
 
     def __parse_item_count(self,selector):
-        pass
+        return selector.xpath('//div[@class="col-offer"]//span[@class="item-count small text-right"]/text()').get()
 
     #utils
 
