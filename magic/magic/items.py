@@ -24,7 +24,7 @@ class MagicCardMarketOffer(Item):
     seller = Field(type=str)
     card_condition = Field(type=str)
     card_language = Field(type=str)
-    is_professional = Field(type=str)
+    professional_type = Field(type=str)
     is_foil = Field(type=bool)
     is_signed = Field(type=bool)
     is_playset = Field(type=bool)

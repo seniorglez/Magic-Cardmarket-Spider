@@ -97,7 +97,7 @@ class MkmSpider(scrapy.Spider):
         item['seller'] = self.__parse_seller(selector)
         item['card_condition'] = self.__parse_card_condition(selector)
         item['card_language'] = self.__parse_card_language(selector)
-       #item['is_professional'] = self.
+        item['professional_type'] = self.__parse_professional_type(selector)
        #item['is_foil'] = self.
        #item['is_signed'] = self.
         item['is_playset'] = self.__parse_is_playset(selector)
@@ -149,12 +149,9 @@ class MkmSpider(scrapy.Spider):
     def __parse_card_language(self,selector):
         return selector.xpath('//div[@class="col-sellerProductInfo col"]/div[@class="row no-gutters"]/div[2]//span[@class="icon mr-2"]/@data-original-title').get()
 
-    def __parse_is_professional(self,selector):
-        response=selector.xpath('//div[@class="col-sellerProductInfo col"]/div[@class="row no-gutters"]/div[2]//span[@class="icon st_SpecialIcon mr-1"]/@data-original-title').get()
-        if response:
-            return True
-        return False
-
+    def __parse_professional_type(self,selector):
+        return selector.xpath('//div[@class="col-sellerProductInfo col"]/div[@class="row no-gutters"]/div[1]/span/span/span[@class="d-flex has-content-centered mr-1 proFaded ml-lg-auto"]/span/@data-original-title').get()
+        
     def __parse_is_foil(self,selector):
         pass
 
