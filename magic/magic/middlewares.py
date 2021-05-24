@@ -2,14 +2,25 @@
 #
 # See documentation in:
 # https://docs.scrapy.org/en/latest/topics/spider-middleware.html
+import os
+import random
+import logging
 
+from stem import Signal
+from stem.control import Controller
+
+from magic import settings
+
+import scrapy
+from scrapy.crawler import Crawler
+from scrapy.settings import BaseSettings
+from scrapy.spiders import Spider
 from scrapy import signals
 
 # useful for handling different item types with a single interface
 from itemadapter import is_item, ItemAdapter
 
-
-class MkmSpiderMiddleware:
+class MagicSpiderMiddleware:
     # Not all methods need to be defined. If a method is not defined,
     # scrapy acts as if the spider middleware does not modify the
     # passed objects.
@@ -55,8 +66,7 @@ class MkmSpiderMiddleware:
     def spider_opened(self, spider):
         spider.logger.info('Spider opened: %s' % spider.name)
 
-
-class MkmDownloaderMiddleware:
+class MagicDownloaderMiddleware:
     # Not all methods need to be defined. If a method is not defined,
     # scrapy acts as if the downloader middleware does not modify the
     # passed objects.
@@ -101,3 +111,69 @@ class MkmDownloaderMiddleware:
 
     def spider_opened(self, spider):
         spider.logger.info('Spider opened: %s' % spider.name)
+
+class RandomUserAgentMiddleware:
+
+    def process_request(self, request, spider):
+        ua  = random.choice(settings.USER_AGENT_LIST) # good enough for now
+        if ua:
+            request.headers.setdefault('User-Agent', ua)
+
+class TorProxyMiddleware:
+
+    logger = logging.getLogger("tor-proxy-middleware")
+    enabled = False
+    proxy_url ="http://localhost:8118"
+    control_password = ""
+
+    @classmethod
+    def from_crawler(cls, crawler):
+        # This method is used by Scrapy to create your spiders.
+        s = cls()
+        crawler.signals.connect(s.spider_opened, signal=signals.spider_opened)
+        return s
+
+    def spider_opened(self, spider):
+        try:
+            spider_attr = getattr(spider, "TOR_PROXY_ENABLED")
+        except AttributeError:
+            if not spider.crawler.settings.getbool("TOR_PROXY_ENABLED"):
+                self.enabled = False
+                self.logger.info("Tor Proxy disabled (TOR_PROXY_ENABLED setting)")
+                return
+        else:
+            if not BaseSettings({"enabled": spider_attr}).getbool("enabled"):
+                self.enabled = False
+                self.logger.info("Tor Proxy disabled (tor_proxy_enabled spider attribute)")
+                return
+            
+        self.enabled = True
+        self._read_settings(spider.crawler.settings)
+        if self.enabled:
+            self.logger.info("Using Tor Proxy at %s", self.proxy_url)
+     
+    def _read_settings(self, settings):
+        if not settings.get("TOR_PROXY_CONTROL_PASSWORD"):
+            self.enabled = False
+            self.logger.info("Tor Proxy cannot be used without a control password")
+            return
+        
+        self.control_password = settings["TOR_PROXY_CONTROL_PASSWORD"]
+
+    def process_request(self, request, spider):
+        if not self.enabled:
+            return None
+        request.meta['proxy'] = self.proxy_url
+        self.set_new_ip()
+    
+    def set_new_ip(self):
+        """Change IP using TOR"""
+        with Controller.from_port(port=9051) as controller:
+            if controller.is_newnym_available():
+                try:
+                    controller.authenticate(self.control_password)
+                    controller.signal(Signal.NEWNYM)
+                except:
+                    print("Unable to authenticate, password is incorrect")
+            else:
+                print("No newnym available")

@@ -1,0 +1,9 @@
+version: '3.7'
+services:
+
+  tor-node:
+    build: ./tor-privoxy
+    restart: always
+    ports:
+    - "9051:9051" # Tor control port
+    - "8118:8118" # Privoxy

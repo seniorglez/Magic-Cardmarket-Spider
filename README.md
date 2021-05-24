@@ -23,7 +23,7 @@ PATH="${PATH}:${HOME}/.local/bin"
 Before executing anything, keep in mind that this execution may take days:
 
 ```bash
-cd mkm
+cd magic
 
 scrapy crawl mkm -o outputfile.csv
 ```
@@ -31,6 +31,8 @@ scrapy crawl mkm -o outputfile.csv
 ## Built With
 
 * [Scrapy](https://scrapy.org/) - The industry standard for building spiders.
+
+https://serverfault.com/questions/738773/docker-failed-to-add-the-pair-interfaces-operation-not-supported
 
 ## Authors
 
