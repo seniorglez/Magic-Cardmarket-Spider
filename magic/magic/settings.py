@@ -11,6 +11,7 @@ BOT_NAME = 'magic'
 
 SPIDER_MODULES = ['magic.spiders']
 NEWSPIDER_MODULE = 'magic.spiders'
+SPLASH_URL = 'http://192.168.59.103:8050'
 
 
 # Crawl responsibly by identifying yourself (and your website) on the user-agent
@@ -59,10 +60,22 @@ DOWNLOADER_MIDDLEWARES = {
     'magic.middlewares.RandomUserAgentMiddleware': 400,
 #    'magic.middlewares.MagicDownloaderMiddleware': 543,
     'magic.middlewares.TorProxyMiddleware': 410,
-    'scrapy.contrib.downloadermiddleware.useragent.UserAgentMiddleware': None
+    'scrapy.contrib.downloadermiddleware.useragent.UserAgentMiddleware': None,
+    # scrapy-splash
+    'scrapy_splash.SplashCookiesMiddleware': 723,
+    'scrapy_splash.SplashMiddleware': 725,
+    'scrapy.downloadermiddlewares.httpcompression.HttpCompressionMiddleware': 810
 }
 
+SPIDER_MIDDLEWARES = {
+    'scrapy_splash.SplashDeduplicateArgsMiddleware': 100,
+}
+
+DUPEFILTER_CLASS = 'scrapy_splash.SplashAwareDupeFilter'
+
 TOR_PROXY_CONTROL_PASSWORD = 'my_password'
+
+HTTPCACHE_STORAGE = 'scrapy_splash.SplashAwareFSCacheStorage'
 
 # Enable or disable extensions
 # See https://docs.scrapy.org/en/latest/topics/extensions.html
