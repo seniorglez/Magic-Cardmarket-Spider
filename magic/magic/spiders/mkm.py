@@ -1,9 +1,7 @@
 import scrapy
 
-from datetime import datetime
 from scrapy import Request
 from scrapy.selector import Selector
-from scrapy.spidermiddlewares.httperror import HttpError
 from magic.items import MagicCardMarketInformation, MagicCardMarketOffer
 
 class MkmSpider(scrapy.Spider):
