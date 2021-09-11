@@ -127,3 +127,9 @@ dmypy.json
 
 # Pyre type checker
 .pyre/
+
+# MongoDB
+/mongodb
+
+# PyCharm
+.idea
