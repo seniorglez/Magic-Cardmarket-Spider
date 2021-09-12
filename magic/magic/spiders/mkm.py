@@ -4,6 +4,7 @@ from scrapy import Request
 from scrapy.selector import Selector
 from magic.items import MagicCardMarketInformation, MagicCardMarketOffer
 
+
 class MkmSpider(scrapy.Spider):
  
     name = 'mkm'
