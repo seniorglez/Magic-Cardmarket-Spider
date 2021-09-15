@@ -33,6 +33,9 @@ scrapy crawl mkm
 ## Built With
 
 * [Scrapy](https://scrapy.org/) - The industry standard for building spiders.
+* [Docker](https://www.docker.com/)
+* [Privoxy](https://www.privoxy.org/)
+* [Tor](https://www.torproject.org/)
 
 ## Authors
 
