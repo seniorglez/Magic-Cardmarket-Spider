@@ -6,17 +6,13 @@ A scrapy-powered spider which parses all the 'single card' magic advertisement o
 
 These instructions will get you a copy of the project up and running on your local machine for development and testing purposes.
 
-The only package you need is scrapy. To install it, run the following command:
+You will need to install some libs in order to run any spider. To install them, run the following command:
 
 ```bash
-pip install scrapy
+pip install -r requirements.txt
 ```
 
-If your system (I assume it is UNIX) does not recognize the command "scrapy" add it to your path:
-
-```bash
-PATH="${PATH}:${HOME}/.local/bin"
-```
+You also will need to install docker && docker-compose.
 
 ## Run the project
 
@@ -30,9 +26,15 @@ cd magic
 scrapy crawl mkm
 ```
 
+If your system (I assume it is UNIX) does not recognize the command "scrapy" add it to your path:
+
+```bash
+PATH="${PATH}:${HOME}/.local/bin"
+```
+
 ## Built With
 
-* [Scrapy](https://scrapy.org/) - The industry standard for building spiders.
+* [Scrapy](https://scrapy.org/)
 * [Docker](https://www.docker.com/)
 * [Privoxy](https://www.privoxy.org/)
 * [Tor](https://www.torproject.org/)
