@@ -1,6 +1,6 @@
 # Magic-Cardmarket-Spider
 
-A scrapy-powered spider which parses all the 'single card' magic advertisement on https://www.cardmarket.com/.
+A scrapy-powered spider that parses all the 'single card' magic card advertisements on CardMarket.
 
 ## Prerequisites
 
