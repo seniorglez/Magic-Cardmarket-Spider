@@ -20,6 +20,14 @@ class MagicCardMarketInformation(Item):
     average_price_1_day = Field(type=float)
 
 class MagicCardMarketOffer(Item):
+
+    #from MagicCardMarketInformation
+    url = Field(type=str)
+    name = Field(type=str)
+    set_number = Field(type=str)
+    card_set = Field(type=str)
+
+    #Own Field
     country = Field(type=str)
     seller = Field(type=str)
     card_condition = Field(type=str)
