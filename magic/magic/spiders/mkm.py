@@ -81,7 +81,7 @@ class MkmSpider(scrapy.Spider):
         yield info
 
         for offer in self.__get_offers(response):
-            yield self.__parse_offer(Selector(text=offer), card_advert)
+            yield self.__parse_offer(Selector(text=offer), info)
     
     def __get_offers(self,response):#this only will get the 25 first results, I will need to use JS to show all the results.
         ''' This function returns a list with all the offer html
@@ -92,12 +92,13 @@ class MkmSpider(scrapy.Spider):
     
     def __parse_offer(self, selector, card_advert):
 
-        info['url'] = card_advert.url
-        info['name'] = card_advert.name
-        info['set_number'] = card_advert.set_number
-        info['card_set'] = card_advert.card_set
-
         item = MagicCardMarketOffer()
+
+        item['url'] = card_advert['url']
+        item['name'] = card_advert['name']
+        item['set_number'] = card_advert['set_number']
+        item['card_set'] = card_advert['card_set']
+
         item['country'] = self.__parse_country(selector)
         item['seller'] = self.__parse_seller(selector)
         item['card_condition'] = self.__parse_card_condition(selector)
