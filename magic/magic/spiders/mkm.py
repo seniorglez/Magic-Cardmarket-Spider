@@ -12,8 +12,8 @@ class MkmSpider(scrapy.Spider):
     url = 'https://www.cardmarket.com/en/Magic/Products/Singles?idExpansion=0&idRarity=0&sortBy=name_asc&perSite=30'
     
     custom_settings = {
-        'CONCURRENT_REQUESTS': 1,
-        'CONCURRENT_REQUESTS_PER_DOMAIN': 1,
+        'CONCURRENT_REQUESTS': 10,
+        'CONCURRENT_REQUESTS_PER_DOMAIN': 10,
         'DOWNLOAD_DELAY': 5,
         'COOKIES_ENABLED': False,
         'HTTPCACHE_ENABLED': False,
